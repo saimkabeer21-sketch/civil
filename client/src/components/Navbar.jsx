@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, HardHat, Construction } from 'lucide-react';
+import { Menu, X, Building2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
@@ -7,9 +7,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -23,92 +21,89 @@ export default function Navbar() {
   ];
 
   return (
-    <nav 
-      className={`fixed w-full z-50 transition-all duration-500 ${
-        scrolled 
-          ? 'py-4 glass shadow-lg shadow-slate-200/50' 
-          : 'py-6 bg-transparent'
+    <nav
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        scrolled ? 'py-3' : 'py-5'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-2.5 group cursor-pointer"
-          >
-            <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white group-hover:bg-blue-600 transition-colors duration-300 shadow-lg shadow-slate-200">
-              <Construction size={22} strokeWidth={2.5} />
-            </div>
-            <span className="text-2xl font-display font-extrabold text-slate-900 tracking-tight">
-              Civic<span className="text-blue-600">Edge</span>
-            </span>
-          </motion.div>
-          
-          <div className="hidden md:flex items-center gap-10">
-            {navLinks.map((link, index) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors relative group"
-              >
-                {link.name}
-                <span className="absolute -bottom-1.5 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full" />
-              </motion.a>
-            ))}
-            <motion.a
-              href="#contact"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-all shadow-md shadow-slate-200"
-            >
-              Let's Build
-            </motion.a>
-          </div>
+      <div className="section-shell">
+        <div
+          className={`rounded-2xl border transition-all duration-300 ${
+            scrolled
+              ? 'bg-white/45 border-white/40 shadow-xl shadow-slate-900/10 backdrop-blur-xl'
+              : 'bg-white/35 border-white/30 backdrop-blur-lg'
+          }`}
+        >
+          <div className="px-4 sm:px-6 py-3.5 flex items-center justify-between">
+            <a href="#home" className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center">
+                <Building2 size={20} />
+              </div>
+              <div className="leading-none">
+                <p className="text-sm text-slate-500 font-semibold uppercase tracking-[0.2em]">Civil Studio</p>
+                <p className="text-xl font-extrabold text-slate-900">
+                  Civic<span className="text-accent">Edge</span>
+                </p>
+              </div>
+            </a>
 
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-slate-100 overflow-hidden"
-          >
-            <div className="px-4 py-8 space-y-4">
+            <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block px-4 py-3 text-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-blue-600 rounded-2xl transition-all"
+                  className="text-sm font-semibold text-slate-700 hover:text-accent transition-colors"
                 >
                   {link.name}
                 </a>
               ))}
               <a
                 href="#contact"
-                onClick={() => setIsOpen(false)}
-                className="block w-full px-4 py-4 bg-slate-900 text-white text-center font-bold rounded-2xl"
+                className="px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-secondary transition-colors"
               >
-                Get in Touch
+                Start a Project
               </a>
+            </div>
+
+            <button
+              onClick={() => setIsOpen((prev) => !prev)}
+              className="md:hidden p-2 rounded-xl bg-slate-100 text-slate-800"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden overflow-hidden"
+          >
+            <div className="section-shell">
+              <div className="mt-3 rounded-2xl bg-white/45 border border-white/40 backdrop-blur-xl p-4 space-y-2 shadow-lg">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="block px-3 py-2.5 rounded-lg text-slate-700 font-semibold hover:bg-slate-100"
+                  >
+                    {link.name}
+                  </a>
+                ))}
+                <a
+                  href="#contact"
+                  onClick={() => setIsOpen(false)}
+                  className="block text-center px-4 py-3 rounded-lg bg-primary text-white font-bold"
+                >
+                  Start a Project
+                </a>
+              </div>
             </div>
           </motion.div>
         )}

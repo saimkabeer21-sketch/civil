@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageSquare, Clock } from 'lucide-react';
-import axios from 'axios';
+import { Mail, Phone, MapPin, Send, Clock4 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: '',
   });
@@ -15,14 +15,31 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ type: 'info', message: 'Sending message...' });
-    
+
     try {
-      const response = await axios.post('/api/contact', formData);
-      setStatus({ type: 'success', message: response.data.message });
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: '4a809426-d605-469f-905a-ec0d44b8b18a',
+          ...formData,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setStatus({ type: 'success', message: 'Message sent successfully. Our team will contact you shortly.' });
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      } else {
+        setStatus({ type: 'error', message: result.message || 'Failed to send message. Please try again.' });
+      }
+
       setTimeout(() => setStatus({ type: '', message: '' }), 5000);
     } catch (error) {
-      console.error('Error sending message:', error);
       setStatus({ type: 'error', message: 'Failed to send message. Please try again.' });
     }
   };
@@ -32,150 +49,113 @@ export default function Contact() {
   };
 
   const contactInfo = [
-    { icon: Phone, label: 'Call Us', value: '+1 (555) 123-4567', sub: 'Mon-Fri, 9am-6pm' },
-    { icon: Mail, label: 'Email Us', value: 'contact@civicedge.com', sub: '24/7 Support' },
-    { icon: MapPin, label: 'Visit Us', value: '123 Engineering Way', sub: 'Structure City, SC 90210' },
+    { icon: Phone, label: 'Call', value: '+91 8767199833', sub: '' },
+    { icon: Mail, label: 'Email', value: 'saimkabeer77@gmail.com', sub: '' },
+    { icon: MapPin, label: 'Office', value: 'Zakir Colony Amravati', sub: '' },
   ];
 
   return (
-    <section id="contact" className="py-24 bg-slate-50 relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-100/50 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">Let's Discuss Your Project</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Ready to start your next engineering masterpiece? Reach out to our team of experts for a comprehensive consultation.
-            </p>
-          </motion.div>
-        </div>
-
-        <div className="flex flex-col lg:flex-row gap-16">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:w-1/3 space-y-6"
-          >
-            {contactInfo.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <div key={index} className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex items-center gap-6 group hover:shadow-md transition-all">
-                  <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <Icon size={24} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-1">{item.label}</p>
-                    <p className="text-lg font-bold text-slate-900">{item.value}</p>
-                    <p className="text-sm text-slate-500">{item.sub}</p>
-                  </div>
-                </div>
-              );
-            })}
-
-            <div className="bg-slate-900 p-8 rounded-[2rem] text-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 opacity-10">
-                <Clock size={80} />
-              </div>
-              <h4 className="text-xl font-bold mb-4">Fast Response Time</h4>
-              <p className="text-slate-400 leading-relaxed text-sm">
-                We typically respond to all inquiries within 24 business hours. Our engineers are ready to assist you.
+    <section id="contact" className="py-24">
+      <div className="section-shell">
+        <div className="rounded-[2rem] overflow-hidden border border-white/40 bg-white/35 backdrop-blur-xl shadow-[var(--shadow-card)]">
+          <div className="grid lg:grid-cols-[0.95fr_1.4fr]">
+            <div className="bg-primary text-white p-8 lg:p-10 relative overflow-hidden">
+              <div className="ambient-orb w-64 h-64 -top-16 -right-10 bg-cyan-300/35" />
+              <p className="text-sm uppercase tracking-[0.22em] text-cyan-200 font-semibold">Contact CivicEdge</p>
+              <h2 className="mt-4 text-3xl lg:text-4xl font-bold leading-tight">Let us engineer your next build with confidence</h2>
+              <p className="mt-4 text-slate-200 leading-relaxed">
+                Share your project scope, goals, and timeline. We will propose practical and build-ready engineering guidance.
               </p>
-            </div>
-          </motion.div>
 
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:w-2/3"
-          >
-            <div className="bg-white p-10 lg:p-12 rounded-[3rem] shadow-xl shadow-slate-200/50 border border-slate-100">
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all outline-none"
-                      placeholder="John Doe"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all outline-none"
-                      placeholder="john@example.com"
-                    />
-                  </div>
+              <div className="mt-8 space-y-4 relative z-10">
+                {contactInfo.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.label} className="rounded-2xl bg-white/10 border border-white/20 p-4 flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                        <Icon size={18} />
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.18em] text-cyan-200 font-bold">{item.label}</p>
+                        <p className="font-bold mt-1">{item.value}</p>
+                        <p className="text-sm text-slate-200">{item.sub}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-6 rounded-2xl bg-white/10 border border-white/20 p-4 flex items-center gap-3 relative z-10">
+                <Clock4 size={18} className="text-cyan-200" />
+                <p className="text-sm text-slate-100">Average response time: less than 24 business hours.</p>
+              </div>
+            </div>
+
+            <div className="p-8 lg:p-10 bg-gradient-to-b from-white to-slate-50">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-5">
+                  <Input label="Full Name" name="name" value={formData.name} onChange={handleChange} placeholder="John Doe" required />
+                  <Input label="Email Address" name="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" type="email" required />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 ml-1">Subject</label>
-                  <input
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all outline-none"
-                    placeholder="Project Inquiry"
-                  />
+
+                <div className="grid md:grid-cols-2 gap-5">
+                  <Input label="Phone Number" name="phone" value={formData.phone} onChange={handleChange} placeholder="+1 (555) 000-0000" required />
+                  <Input label="Subject" name="subject" value={formData.subject} onChange={handleChange} placeholder="Project Inquiry" required />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 ml-1">Your Message</label>
+
+                <div>
+                  <label className="text-sm font-semibold text-slate-700">Message</label>
                   <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
                     required
                     rows="5"
-                    className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all outline-none resize-none"
-                    placeholder="Tell us about your engineering needs..."
-                  ></textarea>
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-4 focus:ring-cyan-100 focus:border-accent"
+                    placeholder="Tell us about your project requirements..."
+                  />
                 </div>
-                
+
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full bg-slate-900 text-white font-bold py-5 rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 flex items-center justify-center gap-3 group"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-primary text-white font-bold hover:bg-secondary transition-colors"
                 >
-                  <span>Send Message</span>
-                  <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  Send Message
+                  <Send size={16} />
                 </motion.button>
-                
+
                 {status.message && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`p-4 rounded-xl text-center font-bold text-sm ${
-                      status.type === 'success' ? 'bg-green-50 text-green-700' : 
-                      status.type === 'error' ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-blue-700'
+                  <div
+                    className={`rounded-xl px-4 py-3 text-sm font-semibold ${
+                      status.type === 'success'
+                        ? 'bg-green-50 text-green-700 border border-green-100'
+                        : status.type === 'error'
+                        ? 'bg-red-50 text-red-700 border border-red-100'
+                        : 'bg-blue-50 text-blue-700 border border-blue-100'
                     }`}
                   >
                     {status.message}
-                  </motion.div>
+                  </div>
                 )}
               </form>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function Input({ label, ...props }) {
+  return (
+    <div>
+      <label className="text-sm font-semibold text-slate-700">{label}</label>
+      <input
+        {...props}
+        className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-4 focus:ring-cyan-100 focus:border-accent"
+      />
+    </div>
   );
 }

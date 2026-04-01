@@ -8,10 +8,10 @@ const projects = [
   },
   {
     id: 2,
-    title: "Urban Bridge Infrastructure",
-    description: "Design and supervision of a major urban bridge connecting two business districts.",
-    image: "https://images.unsplash.com/photo-1508459855340-fb63ac591728?auto=format&fit=crop&w=800&q=80",
-    category: "Bridge Engineering"
+    title: "Modern Interior Designs",
+    description: "High-end interior architecture and aesthetic workplace rendering.",
+    image: "/media2/interior_design_project.png",
+    category: "Interior Design"
   },
   {
     id: 3,
